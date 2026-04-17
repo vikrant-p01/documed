@@ -1,0 +1,18 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Document Icon -->
+  <g id="document">
+    <rect x="80" y="120" width="180" height="280" rx="16" fill="none" stroke="#1a1a1a" stroke-width="24"/>
+    <line x1="140" y1="180" x2="280" y2="180" stroke="#1a1a1a" stroke-width="16" stroke-linecap="round"/>
+    <line x1="140" y1="260" x2="280" y2="260" stroke="#1a1a1a" stroke-width="16" stroke-linecap="round"/>
+    <line x1="140" y1="340" x2="220" y2="340" stroke="#1a1a1a" stroke-width="16" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Medical Cross Icon -->
+  <rect x="240" y="240" width="140" height="140" rx="24" fill="#2563eb"/>
+  <rect x="285" y="260" width="50" height="100" fill="white"/>
+  <rect x="255" y="290" width="110" height="50" fill="white"/>
+  
+  <!-- Text: DocuMed -->
+  <text x="420" y="340" font-family="Arial, sans-serif" font-size="96" font-weight="bold" fill="#1a1a1a">Docu</text>
+  <text x="420" y="340" font-family="Arial, sans-serif" font-size="96" font-weight="bold" fill="#2563eb">Med</text>
+</svg>
