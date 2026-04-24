@@ -1,22 +1,30 @@
 import mysql from 'mysql2/promise';
 
-// Check if required environment variables are set
+const dbConfig = {
+  host: process.env.MYSQLHOST || process.env.DB_HOST || 'mysql.railway.internal',
+  port: parseInt(process.env.MYSQLPORT || process.env.DB_PORT || '3306'),
+  user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
+  password:
+    process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || 'YafJKZfhGXJDdfEEysgKONxsHsqVInwa',
+  database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'railway',
+};
+
 const hasDBConfig = !!(
-  process.env.DB_HOST &&
-  process.env.DB_USER &&
-  process.env.DB_PASSWORD &&
-  process.env.DB_NAME
+  dbConfig.host &&
+  dbConfig.user &&
+  dbConfig.password &&
+  dbConfig.database
 );
 
 let pool: any = null;
 
 if (hasDBConfig) {
   pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT || '3306'),
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    host: dbConfig.host,
+    port: dbConfig.port,
+    user: dbConfig.user,
+    password: dbConfig.password,
+    database: dbConfig.database,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
@@ -25,7 +33,9 @@ if (hasDBConfig) {
 
 export async function query(sql: string, values?: any[]) {
   if (!pool) {
-    throw new Error('Database not configured. Please set DB_HOST, DB_USER, DB_PASSWORD, and DB_NAME environment variables.');
+    throw new Error(
+      'Database not configured. Please set Railway MYSQL* variables or DB_HOST, DB_USER, DB_PASSWORD, and DB_NAME.'
+    );
   }
   const connection = await pool.getConnection();
   try {
