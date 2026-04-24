@@ -6,7 +6,7 @@
 - Node.js and npm installed
 
 ## Environment Variables
-Set the following environment variables in your `.env.local` file:
+Set the following environment variables in your local `.env` or `.env.local` file:
 
 ```
 DB_HOST=localhost
@@ -14,6 +14,22 @@ DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=your_mysql_password
 DB_NAME=documed
+```
+
+On Railway, add either:
+
+```env
+DB_HOST=${{MySQL.MYSQLHOST}}
+DB_PORT=${{MySQL.MYSQLPORT}}
+DB_USER=${{MySQL.MYSQLUSER}}
+DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
+DB_NAME=${{MySQL.MYSQLDATABASE}}
+```
+
+or a single connection string:
+
+```env
+DATABASE_URL=${{MySQL.MYSQL_URL}}
 ```
 
 ## Database Setup Steps
