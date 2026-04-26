@@ -53,7 +53,7 @@ pnpm install
 2. **Set Environment Variables**
 ```env
 # .env.local
-OPENAI_API_KEY=your_claude_api_key_here
+OPENAI_API_KEY=your_google_gemini_api_key_here
 MYSQLHOST=your_database_host
 MYSQLPORT=3306
 MYSQLUSER=your_database_user
@@ -82,7 +82,7 @@ Access the chatbot at: `http://localhost:3000/chatbot`
 
 **`/api/chat` (POST)**
 - Handles chat message processing
-- Sends messages to Claude AI
+- Sends messages to Google Gemini API
 - Returns assistant responses
 - Request format:
 ```json
@@ -193,16 +193,17 @@ const messages = await query(
 
 ## AI Model Configuration
 
-The chatbot uses **Claude 3.5 Sonnet** for optimal balance of:
+The chatbot uses **Google Gemini 1.5 Flash** for optimal balance of:
 - Intelligence and reasoning
 - Response quality
 - Cost-effectiveness
 - Safety and compliance
 
 ### Model Parameters
-- **Model**: claude-3-5-sonnet-20241022
+- **Model**: gemini-1.5-flash
 - **Max Tokens**: 1024
-- **Temperature**: Default (0.7 - can be customized)
+- **Temperature**: 0.7 (customizable)
+- **API Endpoint**: generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash
 
 ## Security & Privacy
 
@@ -311,6 +312,6 @@ Users are always encouraged to:
 
 ## License & Attribution
 
-- Built with Claude AI (Anthropic)
+- Built with Google Gemini AI (Google)
 - Uses Next.js, React, and TypeScript
 - Radix UI components for interface
