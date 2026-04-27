@@ -193,17 +193,18 @@ const messages = await query(
 
 ## AI Model Configuration
 
-The chatbot uses **Google Gemini Pro** for optimal balance of:
+The chatbot uses **Google Gemini 1.5 Pro** for optimal balance of:
 - Intelligence and reasoning
 - Response quality
 - Cost-effectiveness
 - Safety and compliance
 
 ### Model Parameters
-- **Model**: gemini-pro
+- **Model**: gemini-1.5-pro
+- **API Version**: v1 (stable)
 - **Max Tokens**: 1024
 - **Temperature**: 0.7 (customizable)
-- **API Endpoint**: generativelanguage.googleapis.com/v1beta/models/gemini-pro
+- **API Endpoint**: generativelanguage.googleapis.com/v1/models/gemini-1.5-pro
 
 ## Security & Privacy
 

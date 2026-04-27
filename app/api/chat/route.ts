@@ -68,7 +68,7 @@ Remember: Your goal is to empower patients to make better day-to-day health deci
     };
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.OPENAI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${process.env.OPENAI_API_KEY}`,
       {
         method: 'POST',
         headers: {
