@@ -190,107 +190,112 @@ Always emphasize consulting their doctor for medical decisions. Keep responses c
         onClick={onClose}
       />
 
-      {/* Modal */}
-      <div className="fixed bottom-4 right-4 w-full max-w-md h-[600px] bg-white rounded-lg shadow-2xl z-50 flex flex-col border border-border">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border bg-gradient-to-r from-blue-50 to-indigo-50">
-          <div className="flex items-center gap-2">
-            <MessageCircle className="h-5 w-5 text-blue-600" />
-            <h2 className="font-semibold text-gray-900">Health Assistant</h2>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="h-6 w-6 p-0"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-
-        {/* Health Disclaimer */}
-        <Alert className="m-3 bg-blue-50 border-blue-200">
-          <AlertCircle className="h-3 w-3 text-blue-600" />
-          <div className="text-xs text-blue-800">
-            Based on your records. Always consult your doctor for medical decisions.
-          </div>
-        </Alert>
-
-        {/* Messages */}
-        <ScrollArea className="flex-1 p-4 space-y-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={cn(
-                'flex gap-2 mb-4',
-                message.role === 'user' ? 'justify-end' : 'justify-start'
-              )}
-            >
-              <div
-                className={cn(
-                  'max-w-xs px-4 py-2 rounded-lg text-sm leading-relaxed',
-                  message.role === 'user'
-                    ? 'bg-blue-600 text-white rounded-br-none'
-                    : 'bg-gray-100 text-gray-900 rounded-bl-none'
-                )}
-              >
-                {message.content}
+      {/* Modal - Centered Full Screen */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-2xl h-[80vh] bg-white rounded-xl shadow-2xl flex flex-col border border-border overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-border bg-gradient-to-r from-blue-50 to-indigo-50">
+            <div className="flex items-center gap-3">
+              <MessageCircle className="h-6 w-6 text-blue-600" />
+              <div>
+                <h2 className="font-bold text-lg text-gray-900">Your Health Assistant</h2>
+                <p className="text-xs text-gray-600">Personalized recommendations based on your medical records</p>
               </div>
-              {message.role === 'assistant' && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => copyToClipboard(message.content, message.id)}
-                  className="h-6 w-6 p-0"
-                >
-                  {copiedId === message.id ? (
-                    <Check className="h-3 w-3 text-green-600" />
-                  ) : (
-                    <Copy className="h-3 w-3" />
-                  )}
-                </Button>
-              )}
             </div>
-          ))}
-          {error && (
-            <Alert className="bg-red-50 border-red-200">
-              <AlertCircle className="h-3 w-3 text-red-600" />
-              <div className="text-xs text-red-800">{error}</div>
-            </Alert>
-          )}
-          {loading && (
-            <div className="flex items-center gap-2 text-xs text-gray-600">
-              <Loader2 className="h-3 w-3 animate-spin" />
-              Assistant is thinking...
-            </div>
-          )}
-          <div ref={scrollRef} />
-        </ScrollArea>
-
-        {/* Input */}
-        <form onSubmit={sendMessage} className="p-4 border-t border-border">
-          <div className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about your health..."
-              disabled={loading}
-              className="text-sm"
-            />
             <Button
-              type="submit"
-              disabled={loading || !input.trim()}
+              variant="ghost"
               size="sm"
-              className="gap-1"
+              onClick={onClose}
+              className="h-8 w-8 p-0"
             >
-              {loading ? (
-                <Spinner className="h-3 w-3" />
-              ) : (
-                <Send className="h-3 w-3" />
-              )}
+              <X className="h-5 w-5" />
             </Button>
           </div>
-        </form>
+
+          {/* Health Disclaimer */}
+          <Alert className="m-4 bg-blue-50 border-blue-200">
+            <AlertCircle className="h-4 w-4 text-blue-600" />
+            <div className="text-sm text-blue-800">
+              <strong>Important:</strong> This AI provides guidance based on your medical records. Always consult your doctor for medical decisions or emergencies.
+            </div>
+          </Alert>
+
+          {/* Messages */}
+          <ScrollArea className="flex-1 px-6 space-y-4">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={cn(
+                  'flex gap-3 mb-4 py-2',
+                  message.role === 'user' ? 'justify-end' : 'justify-start'
+                )}
+              >
+                <div
+                  className={cn(
+                    'max-w-md px-4 py-3 rounded-lg text-sm leading-relaxed',
+                    message.role === 'user'
+                      ? 'bg-blue-600 text-white rounded-br-none'
+                      : 'bg-gray-100 text-gray-900 rounded-bl-none'
+                  )}
+                >
+                  {message.content}
+                </div>
+                {message.role === 'assistant' && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard(message.content, message.id)}
+                    className="h-8 w-8 p-0 self-center"
+                  >
+                    {copiedId === message.id ? (
+                      <Check className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                )}
+              </div>
+            ))}
+            {error && (
+              <Alert className="bg-red-50 border-red-200">
+                <AlertCircle className="h-4 w-4 text-red-600" />
+                <div className="text-sm text-red-800">{error}</div>
+              </Alert>
+            )}
+            {loading && (
+              <div className="flex items-center gap-2 text-sm text-gray-600 py-4">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                AI is analyzing your health records and preparing recommendations...
+              </div>
+            )}
+            <div ref={scrollRef} />
+          </ScrollArea>
+
+          {/* Input */}
+          <form onSubmit={sendMessage} className="p-6 border-t border-border bg-gray-50">
+            <div className="flex gap-3">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask about your health, medications, exercise, nutrition..."
+                disabled={loading}
+                className="text-base"
+              />
+              <Button
+                type="submit"
+                disabled={loading || !input.trim()}
+                className="gap-2 px-6"
+              >
+                {loading ? (
+                  <Spinner className="h-4 w-4" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+                Send
+              </Button>
+            </div>
+          </form>
+        </div>
       </div>
     </>
   );
