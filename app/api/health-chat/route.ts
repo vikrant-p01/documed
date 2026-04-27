@@ -9,12 +9,18 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
 
+    console.log('🔧 Health Chat API called');
+    console.log('Messages received:', messages.length);
+
     if (!process.env.OPENAI_API_KEY) {
+      console.error('❌ API Key not found in environment variables');
       return NextResponse.json(
         { error: 'Google Gemini API key is not configured' },
         { status: 500 }
       );
     }
+
+    console.log('✅ API Key found, length:', process.env.OPENAI_API_KEY.length);
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -50,9 +56,16 @@ export async function POST(req: NextRequest) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('Google Gemini API error:', errorData);
+      console.error('❌ Google Gemini API error:');
+      console.error('Status:', response.status);
+      console.error('Error details:', JSON.stringify(errorData, null, 2));
+      console.error('API Key set:', !!process.env.OPENAI_API_KEY);
+      console.error('API Key length:', process.env.OPENAI_API_KEY?.length);
       return NextResponse.json(
-        { error: 'Failed to get response from Gemini API' },
+        { 
+          error: `Gemini API Error: ${errorData.error?.message || 'Unknown error'}`,
+          details: errorData 
+        },
         { status: response.status }
       );
     }
