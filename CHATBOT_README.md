@@ -193,14 +193,14 @@ const messages = await query(
 
 ## AI Model Configuration
 
-The chatbot uses **Groq's Mixtral 8x7B** for optimal balance of:
+The chatbot uses **Groq's Llama 3.3 70B Versatile** for optimal balance of:
 - High-speed inference
-- High-quality responses
+- Excellent reasoning and comprehension
 - Cost-effectiveness
 - Reliability and uptime
 
 ### Model Parameters
-- **Model**: mixtral-8x7b-32768
+- **Model**: llama-3.3-70b-versatile
 - **API Version**: OpenAI-compatible v1
 - **Max Tokens**: 1024
 - **Temperature**: 0.7 (customizable)

@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     }));
 
     const requestBody = {
-      model: 'mixtral-8x7b-32768',
+      model: 'llama-3.3-70b-versatile',
       messages: groqMessages,
       max_tokens: 1024,
       temperature: 0.7,
