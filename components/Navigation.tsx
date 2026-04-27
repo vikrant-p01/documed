@@ -66,16 +66,6 @@ export function Navigation() {
             >
               Pharmacy
             </Link>
-            <Link
-              href="/chatbot"
-              className={`text-sm transition-colors ${
-                isActive('/chatbot')
-                  ? 'text-primary font-semibold'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Health Assistant
-            </Link>
           </div>
         </div>
       </div>

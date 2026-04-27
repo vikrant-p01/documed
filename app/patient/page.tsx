@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/authContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { MessageCircle } from 'lucide-react';
+import { HealthChatbotModal } from '@/components/HealthChatbotModal';
 import { fetchDiagnoses, fetchLabAppointments, fetchLabReports, fetchPatient, fetchPrescriptions } from '@/lib/dbUtils';
 
 type PatientProfile = {
@@ -71,6 +73,7 @@ export default function PatientDashboard() {
   const [patientLabReports, setPatientLabReports] = useState<LabReport[]>([]);
   const [patientLabAppointments, setPatientLabAppointments] = useState<LabAppointment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
   useEffect(() => {
     if (!user || user.role !== 'patient') {
@@ -164,6 +167,15 @@ export default function PatientDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsChatbotOpen(true)}
+              className="gap-2"
+            >
+              <MessageCircle className="h-4 w-4" />
+              Health Assistant
+            </Button>
             <div className="text-right">
               <div className="text-sm font-medium text-foreground">{user.name}</div>
               <div className="text-xs text-muted-foreground">Patient</div>
@@ -442,6 +454,18 @@ export default function PatientDashboard() {
           )}
         </div>
       </main>
+
+      {/* Health Assistant Chatbot Modal */}
+      <HealthChatbotModal
+        isOpen={isChatbotOpen}
+        onClose={() => setIsChatbotOpen(false)}
+        patientContext={{
+          diagnoses: patientDiagnoses,
+          prescriptions: patientPrescriptions,
+          labReports: patientLabReports,
+          patientName: personalDetails.name,
+        }}
+      />
     </>
   );
 }
