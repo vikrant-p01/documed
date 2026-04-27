@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-interface GoogleMessage {
-  role: 'user' | 'model';
-  parts: Array<{ text: string }>;
+interface GroqMessage {
+  role: 'user' | 'assistant';
+  content: string;
 }
 
 export async function POST(req: NextRequest) {
   try {
     const { messages, userId } = await req.json();
 
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.GROQ_API_KEY) {
       return NextResponse.json(
-        { error: 'Google Gemini API key is not configured' },
+        { error: 'Groq API key is not configured' },
         { status: 500 }
       );
     }
@@ -45,34 +45,34 @@ IMPORTANT GUIDELINES:
 
 Remember: Your goal is to empower patients to make better day-to-day health decisions while respecting the scope of your role as a health assistant.`;
 
-    // Convert messages to Google Gemini format
-    const geminiMessages: GoogleMessage[] = messages.map((msg: any) => ({
-      role: msg.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msg.content }],
+    // Convert messages to Groq format (OpenAI-compatible)
+    const groqMessages: GroqMessage[] = messages.map((msg: any) => ({
+      role: msg.role === 'assistant' ? 'assistant' : 'user',
+      content: msg.content,
     }));
 
     // Add system prompt as first user message if not present
-    if (geminiMessages.length === 0 || geminiMessages[0].role !== 'user') {
-      geminiMessages.unshift({
+    if (groqMessages.length === 0 || groqMessages[0].role !== 'user') {
+      groqMessages.unshift({
         role: 'user',
-        parts: [{ text: systemPrompt }],
+        content: systemPrompt,
       });
     }
 
     const requestBody = {
-      contents: geminiMessages,
-      generationConfig: {
-        maxOutputTokens: 1024,
-        temperature: 0.7,
-      },
+      model: 'mixtral-8x7b-32768',
+      messages: groqMessages,
+      max_tokens: 1024,
+      temperature: 0.7,
     };
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${process.env.OPENAI_API_KEY}`,
+      'https://api.groq.com/openai/v1/chat/completions',
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
         },
         body: JSON.stringify(requestBody),
       }
@@ -80,29 +80,29 @@ Remember: Your goal is to empower patients to make better day-to-day health deci
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('Google Gemini API error:', errorData);
+      console.error('Groq API error:', errorData);
       return NextResponse.json(
-        { error: 'Failed to get response from Gemini API' },
+        { error: 'Failed to get response from Groq API' },
         { status: response.status }
       );
     }
 
     const data = await response.json();
 
-    // Extract text from Gemini response
+    // Extract text from Groq response
     if (
-      !data.candidates ||
-      !data.candidates[0] ||
-      !data.candidates[0].content ||
-      !data.candidates[0].content.parts
+      !data.choices ||
+      !data.choices[0] ||
+      !data.choices[0].message ||
+      !data.choices[0].message.content
     ) {
       return NextResponse.json(
-        { error: 'Unexpected response format from Gemini API' },
+        { error: 'Unexpected response format from Groq API' },
         { status: 500 }
       );
     }
 
-    const assistantMessage = data.candidates[0].content.parts[0].text;
+    const assistantMessage = data.choices[0].message.content;
 
     return NextResponse.json({
       message: assistantMessage,

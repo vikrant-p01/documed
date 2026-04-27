@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-interface GoogleMessage {
-  role: 'user' | 'model';
-  parts: Array<{ text: string }>;
+interface GroqMessage {
+  role: 'user' | 'assistant';
+  content: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -12,15 +12,15 @@ export async function POST(req: NextRequest) {
     console.log('🔧 Health Chat API called');
     console.log('Messages received:', messages.length);
 
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.GROQ_API_KEY) {
       console.error('❌ API Key not found in environment variables');
       return NextResponse.json(
-        { error: 'Google Gemini API key is not configured' },
+        { error: 'Groq API key is not configured' },
         { status: 500 }
       );
     }
 
-    console.log('✅ API Key found, length:', process.env.OPENAI_API_KEY.length);
+    console.log('✅ Groq API Key found, length:', process.env.GROQ_API_KEY.length);
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -29,26 +29,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Convert messages to Google Gemini format
-    const geminiMessages: GoogleMessage[] = messages.map((msg: any) => ({
-      role: msg.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msg.content }],
+    // Convert messages to Groq format (OpenAI-compatible)
+    const groqMessages: GroqMessage[] = messages.map((msg: any) => ({
+      role: msg.role === 'assistant' ? 'assistant' : 'user',
+      content: msg.content,
     }));
 
     const requestBody = {
-      contents: geminiMessages,
-      generationConfig: {
-        maxOutputTokens: 1024,
-        temperature: 0.7,
-      },
+      model: 'mixtral-8x7b-32768',
+      messages: groqMessages,
+      max_tokens: 1024,
+      temperature: 0.7,
     };
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${process.env.OPENAI_API_KEY}`,
+      'https://api.groq.com/openai/v1/chat/completions',
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
         },
         body: JSON.stringify(requestBody),
       }
@@ -56,14 +56,14 @@ export async function POST(req: NextRequest) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('❌ Google Gemini API error:');
+      console.error('❌ Groq API error:');
       console.error('Status:', response.status);
       console.error('Error details:', JSON.stringify(errorData, null, 2));
-      console.error('API Key set:', !!process.env.OPENAI_API_KEY);
-      console.error('API Key length:', process.env.OPENAI_API_KEY?.length);
+      console.error('API Key set:', !!process.env.GROQ_API_KEY);
+      console.error('API Key length:', process.env.GROQ_API_KEY?.length);
       return NextResponse.json(
         { 
-          error: `Gemini API Error: ${errorData.error?.message || 'Unknown error'}`,
+          error: `Groq API Error: ${errorData.error?.message || 'Unknown error'}`,
           details: errorData 
         },
         { status: response.status }
@@ -72,20 +72,20 @@ export async function POST(req: NextRequest) {
 
     const data = await response.json();
 
-    // Extract text from Gemini response
+    // Extract text from Groq response
     if (
-      !data.candidates ||
-      !data.candidates[0] ||
-      !data.candidates[0].content ||
-      !data.candidates[0].content.parts
+      !data.choices ||
+      !data.choices[0] ||
+      !data.choices[0].message ||
+      !data.choices[0].message.content
     ) {
       return NextResponse.json(
-        { error: 'Unexpected response format from Gemini API' },
+        { error: 'Unexpected response format from Groq API' },
         { status: 500 }
       );
     }
 
-    const assistantMessage = data.candidates[0].content.parts[0].text;
+    const assistantMessage = data.choices[0].message.content;
 
     return NextResponse.json({
       message: assistantMessage,

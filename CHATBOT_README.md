@@ -39,7 +39,7 @@ The Health Assistant Chatbot is an AI-powered companion that helps patients make
 ### Prerequisites
 - Node.js 18+
 - MySQL database
-- OpenAI/Claude API key
+- Groq API key
 
 ### Installation
 
@@ -53,7 +53,7 @@ pnpm install
 2. **Set Environment Variables**
 ```env
 # .env.local
-OPENAI_API_KEY=your_google_gemini_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
 MYSQLHOST=your_database_host
 MYSQLPORT=3306
 MYSQLUSER=your_database_user
@@ -82,7 +82,7 @@ Access the chatbot at: `http://localhost:3000/chatbot`
 
 **`/api/chat` (POST)**
 - Handles chat message processing
-- Sends messages to Google Gemini API
+- Sends messages to Groq API
 - Returns assistant responses
 - Request format:
 ```json
@@ -193,18 +193,18 @@ const messages = await query(
 
 ## AI Model Configuration
 
-The chatbot uses **Google Gemini 2.0 Flash (Experimental)** for optimal balance of:
-- Latest intelligence capabilities
-- Response quality
-- Speed and cost-effectiveness
-- Safety and compliance
+The chatbot uses **Groq's Mixtral 8x7B** for optimal balance of:
+- High-speed inference
+- High-quality responses
+- Cost-effectiveness
+- Reliability and uptime
 
 ### Model Parameters
-- **Model**: gemini-2.0-flash-exp
-- **API Version**: v1beta (latest)
+- **Model**: mixtral-8x7b-32768
+- **API Version**: OpenAI-compatible v1
 - **Max Tokens**: 1024
 - **Temperature**: 0.7 (customizable)
-- **API Endpoint**: generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp
+- **API Endpoint**: https://api.groq.com/openai/v1/chat/completions
 
 ## Security & Privacy
 
@@ -231,8 +231,8 @@ The chatbot uses **Google Gemini 2.0 Flash (Experimental)** for optimal balance 
 
 ## Troubleshooting
 
-### Issue: "OpenAI API key is not configured"
-**Solution**: Verify `OPENAI_API_KEY` is set in `.env.local`
+### Issue: "Groq API key is not configured"
+**Solution**: Verify `GROQ_API_KEY` is set in `.env.local`
 
 ### Issue: Database connection errors
 **Solution**: Check MySQL connection parameters in environment variables
@@ -313,6 +313,6 @@ Users are always encouraged to:
 
 ## License & Attribution
 
-- Built with Google Gemini AI (Google)
+- Built with Groq AI (Groq)
 - Uses Next.js, React, and TypeScript
 - Radix UI components for interface
