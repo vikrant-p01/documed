@@ -193,18 +193,18 @@ const messages = await query(
 
 ## AI Model Configuration
 
-The chatbot uses **Google Gemini 1.5 Flash** for optimal balance of:
-- Intelligence and reasoning
+The chatbot uses **Google Gemini 2.0 Flash (Experimental)** for optimal balance of:
+- Latest intelligence capabilities
 - Response quality
-- Cost-effectiveness
+- Speed and cost-effectiveness
 - Safety and compliance
 
 ### Model Parameters
-- **Model**: gemini-1.5-flash-latest
-- **API Version**: v1 (stable)
+- **Model**: gemini-2.0-flash-exp
+- **API Version**: v1beta (latest)
 - **Max Tokens**: 1024
 - **Temperature**: 0.7 (customizable)
-- **API Endpoint**: generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest
+- **API Endpoint**: generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp
 
 ## Security & Privacy
 
